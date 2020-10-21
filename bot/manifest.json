@@ -1,0 +1,26 @@
+{
+    "sql": {
+        "host": "",
+        "user": "",
+        "password": "",
+        "database": ""
+    },
+    "bot": {
+        "development_mode": false,
+        "prefix": "?",
+        "token": "",
+        "color": "#9db8e3",
+        "author": "© ✨ Austin#9949",
+        "command_constants": {
+            "internal_error": "There has been an internal server error. Please report this to the bot developer.",
+            "setup": {
+                "invalidargs": "Usage: \n %prefix%%command% <ip>",
+                "invalidrange": "The inserted ip range isn't valid.",
+                "invalidport": "The inserted port can't be validated.",
+                "invalidownership": "I wasn't able to validated your ownership of the server. Please ensure that you put the discord server id in your config.yml.",
+                "alreadylinked": "Your server is already linked in our system.",
+                "linked": "Your discord server is now linked to your minecraft server. You may proceed with the setup."
+            }
+        }
+    }
+}
