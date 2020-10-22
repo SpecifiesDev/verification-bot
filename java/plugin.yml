@@ -1,3 +1,8 @@
 name: Verification
 main: me.specifies.core.Verification
 version: 1.0
+
+commands:
+  link:
+    usage: /link
+    description: Command to link a player's Minecraft account with their discord account.

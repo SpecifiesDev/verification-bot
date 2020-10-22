@@ -46,8 +46,12 @@ const setup = async (message, args, pool, guild) => {
                 // If the server is already linked, notify the user of the fact
                 if(res) return await message.channel.send(embeds.embed("Already Linked", constants.alreadylinked));
 
+                // construct the json object to insert into the database
+                if(!(args[1].length > 10)) return await message.channel.send(embeds.embed("Invalid Token Configuration", constants.invalidtoken));
+                let tokens = JSON.stringify({tokens: [args[1]]});
+
                 // Proceed to link server
-                pool.linkServer(guild, args[0], async err => {
+                pool.linkServer(guild, args[0], tokens, async err => {
                     if(err) {
                         logger.error(err);
                         return await message.channel.send(embeds.embed("Internal Server Error", internal_error));

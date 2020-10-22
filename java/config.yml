@@ -1,3 +1,9 @@
 discord-server-id: 0
 
 proxy-port: 8080
+
+strict-verification: false
+
+discord-link: http://discord.gg/hi
+
+api-token: 0

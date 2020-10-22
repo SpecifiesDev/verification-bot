@@ -4,6 +4,8 @@ const logger = require('./utils/Logger')
 const discord = require("discord.js");
 const axios = require('axios');
 const fs = require('fs');
+const proxy = require('./proxy/server');
+
 
 
 // parse the manifest
@@ -26,6 +28,7 @@ for(let file of fs.readdirSync('./commands').filter(file => file.endsWith('.js')
 
 client.on('ready', () => {
     logger.info("Bot is online.");
+    proxy.start();
     client.user.setActivity(`${prefix}help`);
 });
 
@@ -55,6 +58,8 @@ client.on('message', async message => {
         if(command === `${prefix}ping`) commands.get('ping').execute(message);
 
         if(command === `${prefix}setup`) commands.get('setup').execute(message, args, manager, guildId);
+
+        if(command === `${prefix}verify`) commands.get('verify').execute(message, args, manager, guildId);
 
     }
 

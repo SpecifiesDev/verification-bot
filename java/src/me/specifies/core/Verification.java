@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.specifies.core.Commands.Link;
 import me.specifies.core.Proxy.ProxyServer;
 
 public class Verification extends JavaPlugin {
@@ -15,6 +16,7 @@ public class Verification extends JavaPlugin {
 	public void onEnable() {
 		
 		core = this;
+	
 		registerEvents();
 		registerCommands();
 		
@@ -35,7 +37,7 @@ public class Verification extends JavaPlugin {
 	}
 	
 	private void registerCommands() {
-		
+		getCommand("link").setExecutor(new Link());
 	}
 	
 	public static Verification getInstance() {

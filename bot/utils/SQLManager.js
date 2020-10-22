@@ -19,20 +19,103 @@ let manager = {};
  * @param {String} ip 
  * @param {callback} callback 
  */
-manager.linkServer = (id, ip, callback) => {
+manager.linkServer = (id, ip, tokens, callback) => {
 
-    console.log(id);
-    pool.query(`CREATE TABLE IF NOT EXISTS \`${id}\`(ip TEXT, verified TEXT)`, err => {
-        if(err) return logger.error(err);
+    pool.query(`CREATE TABLE IF NOT EXISTS \`${id}\`(ip TEXT, verified TEXT, tokens TEXT)`, err => {
+        if(err) {
+            logger.error(err);
+            return callback(err);
+        }
 
         logger.info(`A new server has been linked. ID: ${id}`);
         
-        pool.query(`INSERT INTO \`${id}\` (ip, verified) VALUES(?, ?)`, [ip, true], err => {
-            if(err) return callback(err);
+        pool.query(`CREATE TABLE IF NOT EXISTS \`${id}_players\`(uuid TEXT, linkStatus TEXT, discordID TEXT, code TEXT, status TEXT, message TEXT, chat TEXT)`, err => {
+            if(err) {
+                logger.error(err);
+                return callback(err);
+            }
 
-            callback();
-        });
+            pool.query(`INSERT INTO \`${id}\` (ip, verified, tokens) VALUES(?, ?, ?)`, [ip, true, tokens], err => {
+                if(err) return callback(err);
+    
+                callback();
+            });
+        })
 
+    });
+
+}
+
+/**
+ * Function to pull a player's data from a connected discord server.
+ * @param {String} id 
+ * @param {String} uuid 
+ * @param {callback} callback 
+ */
+manager.getPlayer = (id, uuid, callback) => {
+
+
+    pool.query(`SELECT * FROM \`${id}_players\` WHERE uuid = ?`, [uuid], (err, res) => {
+        if(err) return callback("", err);
+        if(res.length == 0) return callback(res);
+        callback(res);
+    });
+
+}
+
+manager.deletePlayer = (id, uuid, callback) => {
+
+    pool.query(`DELETE FROM \`${id}_players\` WHERE uuid = ?`, [uuid], err => {
+        if(err) return callback(err);
+        
+        logger.info(`A player from the server ${id} has been removed from the players table.`);
+        callback();
+    });
+
+}
+
+manager.updatePlayer = (id, uuid, insertion, callback) => {
+
+    pool.query(`UPDATE \`${id}_players\` SET linkStatus = ?, discordID = ? WHERE uuid = ?`, [insertion.linkStatus, insertion.discordID, uuid], err => {
+        if(err) return callback(err);
+
+        callback();
+    });
+}
+
+manager.checkVerificationCode = (id, code, callback) => {
+
+    pool.query(`SELECT * FROM \`${id}_players\` WHERE code = ?`, [code], (err, res) => {
+        if(err) return callback("", err);
+        if(res.length == 0) return callback(res);
+        callback(res);
+    });
+}
+
+manager.createPlayer = (id, uuid, code, callback) => {
+
+    pool.query(`INSERT INTO \`${id}_players\` (uuid, linkStatus, discordID, code, status, message, chat) VALUES (?, 0, 0, ?, 1, 1, 1)`, [uuid, code], err => {
+        if(err) {
+            logger.error(err);
+            return callback(err);
+        }
+
+        callback();
+    });
+
+}
+
+/**
+ * Function to get a server's valid tokens. Querying body should do standard null checks to ensure that there are tokens in storage.
+ * @param {String} id 
+ * @param {callback} callback 
+ */
+manager.getServerTokens = (id, callback) => {
+
+    pool.query(`SELECT tokens FROM \`${id}\``, (err, res) => {
+        if(err) return callback("", err);
+
+        callback(res[0].tokens);
     });
 
 }
@@ -44,12 +127,16 @@ manager.linkServer = (id, ip, callback) => {
  */
 manager.deleteServerLink = async(id, callback) => {
 
-    pool.query(`DROP TABLE \`${id}\``, err => {
+    pool.query(`DROP TABLE IF EXISTS \`${id}\``, err => {
         if(err) return callback(err);
 
-        logger.info(`A server has been dropped from the database. ID: ${id}`);
+        pool.query(`DROP TABLE IF EXISTS \`${id}_players\``, err => {
+            if(err) return callback(err);
 
-        callback();
+            logger.info(`A server has been dropped from the database. ID: ${id}`);
+
+            callback();
+        });
     });
 }
 
