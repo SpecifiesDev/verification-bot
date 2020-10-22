@@ -1,24 +1,29 @@
+// import libraries
 const embeds = require('../utils/embeds');
 const logger = require('../utils/Logger.js');
 const utils = require("../utils/utils.js");
 const fs = require('fs');
 const axios = require('axios');
 
+// import configuration
 const config = JSON.parse(fs.readFileSync(`${__dirname.split('commands')[0]}manifest.json`));
 
+// pull constants
 const constants = config.bot.command_constants.setup;
 const internal_error = config.bot.command_constants.internal_error;
 
-
+// Execute function for setup command.
 const setup = async (message, args, pool, guild) => {
 
     
-
+    // Ensure that the proper arguments were passed to the command.
     if(args.length == 0) return await message.channel.send(embeds.embed("Invalid Arguments", utils.replacePlaceholders(constants.invalidargs, "setup")))
 
+    // Split the ip and port for validation
     let ip = args[0].split(':')[0];
     let port = args[0].split(':')[1];
 
+    // If there's no port, notify the user. We do this to create a strict system
     if(port == undefined) return await message.channel.send(embeds.embed("Invalid Port", constants.invalidport));
 
     // pulled from a w3 res
@@ -63,7 +68,7 @@ const setup = async (message, args, pool, guild) => {
 
             });
              
-        } else message.channel.send(embeds.embed("Unable to prove Ownership", constants.invalidownership))
+        } else message.channel.send(embeds.embed("Unable to prove Ownership", constants.invalidownership));
 
     } else await message.channel.send(embeds.embed("Internal Server Error", internal_error));
 

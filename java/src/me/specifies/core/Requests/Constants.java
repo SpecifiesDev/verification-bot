@@ -31,6 +31,8 @@ public class Constants {
 		conn.setRequestProperty("server", id);
 		conn.setRequestProperty("User-Agent", agent);
 		
+		conn.setConnectTimeout(5000);
+		
 		return conn;
 	}
 	
@@ -48,6 +50,8 @@ public class Constants {
 		conn.setRequestProperty("Content-Type", "application/json");
 		conn.setRequestProperty("redirect", "follow");
 		conn.setRequestProperty("referrer", "no-referrer");
+		
+		conn.setConnectTimeout(5000);
 		
 		conn.setDoOutput(true);
 		

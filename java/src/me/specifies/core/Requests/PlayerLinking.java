@@ -21,7 +21,7 @@ public class PlayerLinking {
 		HttpURLConnection conn =  consts.newGetConnection("/linking/status/" + UUID);
 		
 		
-		// Create new eader
+		// Create new reader
 		BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 		
 		// Define string buffers to read the response
@@ -45,7 +45,7 @@ public class PlayerLinking {
 		
 		HttpURLConnection conn = consts.newPostConnection("/linking/setstatus/pending");
 		
-		
+		// Construct the body
 		JSONFactory factory = new JSONFactory();
 		
 		factory.putMultiple(new String[] {"UUID", UUID, "token", consts.auth, "server", consts.id});

@@ -74,6 +74,13 @@ manager.deletePlayer = (id, uuid, callback) => {
 
 }
 
+/**
+ * Function to update a player's link status. Might rename this later for more clarity.
+ * @param {String} id 
+ * @param {String} uuid 
+ * @param {Object} insertion 
+ * @param {callback} callback 
+ */
 manager.updatePlayer = (id, uuid, insertion, callback) => {
 
     pool.query(`UPDATE \`${id}_players\` SET linkStatus = ?, discordID = ? WHERE uuid = ?`, [insertion.linkStatus, insertion.discordID, uuid], err => {
@@ -83,6 +90,12 @@ manager.updatePlayer = (id, uuid, insertion, callback) => {
     });
 }
 
+/**
+ * Function to check verification status via a player code.
+ * @param {String} id 
+ * @param {String} code 
+ * @param {callback} callback 
+ */
 manager.checkVerificationCode = (id, code, callback) => {
 
     pool.query(`SELECT * FROM \`${id}_players\` WHERE code = ?`, [code], (err, res) => {
@@ -92,15 +105,28 @@ manager.checkVerificationCode = (id, code, callback) => {
     });
 }
 
+/**
+ * Function to create a new player in the database.
+ * @param {String} id 
+ * @param {String} uuid 
+ * @param {String} code 
+ * @param {callback} callback 
+ */
 manager.createPlayer = (id, uuid, code, callback) => {
 
-    pool.query(`INSERT INTO \`${id}_players\` (uuid, linkStatus, discordID, code, status, message, chat) VALUES (?, 0, 0, ?, 1, 1, 1)`, [uuid, code], err => {
-        if(err) {
-            logger.error(err);
-            return callback(err);
-        }
+    manager.getPlayer(id, uuid, (res, err) => {
+        if(err) return callback("", err);
 
-        callback();
+        if(res.length > 1) return callback("Already exists");
+
+        pool.query(`INSERT INTO \`${id}_players\` (uuid, linkStatus, discordID, code, status, message, chat) VALUES (?, 0, 0, ?, 1, 1, 1)`, [uuid, code], err => {
+            if(err) {
+                logger.error(err);
+                return callback(err);
+            }
+    
+            callback();
+        });
     });
 
 }
