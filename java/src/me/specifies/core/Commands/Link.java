@@ -1,5 +1,7 @@
 package me.specifies.core.Commands;
 
+import java.net.SocketTimeoutException;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -8,18 +10,17 @@ import org.bukkit.entity.Player;
 import com.google.gson.JsonObject;
 
 import me.specifies.core.Verification;
+import me.specifies.core.Constants.PlayerLogging;
 import me.specifies.core.Requests.PlayerLinking;
 
 public class Link implements CommandExecutor {
 	
 	private Verification plugin;
 	private PlayerLinking handler;
-	private String internal_error;
 	
 	public Link() {
 		this.plugin = Verification.getInstance();
 		this.handler = new PlayerLinking();
-		this.internal_error = "&cAn internal error occured. Please contact an Administrator.";
 	}
 	
 
@@ -43,7 +44,7 @@ public class Link implements CommandExecutor {
 				// if the request was a success, continue, if not notify the player
 				if(success) {
 					// if the player is already linked, notify them
-					if(linked) p.sendMessage(plugin.color("&aYou have already verified your account to this server's discord."));
+					if(linked) p.sendMessage(plugin.color(PlayerLogging.VERIFIED));
 					else {
 						// grab the pending value from the request
 						boolean pending = checkLinked.get("pending").getAsBoolean();
@@ -61,24 +62,25 @@ public class Link implements CommandExecutor {
 								
 								String code = setPending.get("code").getAsString().replace("-", "&7-&6");
 								
-								p.sendMessage(plugin.color("&aYour account is now pending verification. You may now verify in the discord server using the code: &6" + code + "&a."));
+								p.sendMessage(plugin.color(PlayerLogging.CREATED_CODE + code + "&a."));
 								
-							} else p.sendMessage(plugin.color(internal_error + " Code: LX51"));
+							} else p.sendMessage(plugin.color(PlayerLogging.INTERNAL_ERROR + " Code: LX51"));
 							
 						} else if(pending) {
 							// If the account is already pending, simply just tell them it's pending and send them a code.
 							String code = checkLinked.get("code").getAsString().replace("-", "&7-&6");
-							p.sendMessage(plugin.color("&aYour account is already pending verification. You may verify it in the discord server using the code: &6" + code + "&a."));
+							p.sendMessage(plugin.color(PlayerLogging.PENDING + code + "&a."));
 							
 						}
 					}
-				} else p.sendMessage(plugin.color(internal_error + " Code: LX41")); // error logging meant to be sent me. Essentially just if something goes wrong on the bot side of things
+				} else p.sendMessage(plugin.color(PlayerLogging.INTERNAL_ERROR + " Code: LX41")); // error logging meant to be sent me. Essentially just if something goes wrong on the bot side of things
 				
 			} catch(Exception err) {
 				err.printStackTrace();
+				p.sendMessage(plugin.color(PlayerLogging.LOCAL_INTERNAL_ERROR));
 			}
 			
-		} else sender.sendMessage(plugin.color("&cYou must be a player to use this command."));
+		} else sender.sendMessage(plugin.color(PlayerLogging.PLAYER_ONLY));
 		
 		return true;
 	}

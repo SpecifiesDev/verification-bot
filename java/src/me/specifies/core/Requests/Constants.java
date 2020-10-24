@@ -1,6 +1,7 @@
 package me.specifies.core.Requests;
 
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 
 import me.specifies.core.Verification;
@@ -19,7 +20,7 @@ public class Constants {
 	}
 	
 	
-	public HttpURLConnection newGetConnection(String endpoint) throws Exception {
+	public HttpURLConnection newGetConnection(String endpoint) throws Exception, SocketTimeoutException {
 		
 		URL obj = new URL(api + endpoint);
 		
@@ -36,7 +37,7 @@ public class Constants {
 		return conn;
 	}
 	
-	public HttpURLConnection newPostConnection(String endpoint) throws Exception {
+	public HttpURLConnection newPostConnection(String endpoint) throws Exception, SocketTimeoutException {
 		
 		URL obj = new URL(api + endpoint);
 		

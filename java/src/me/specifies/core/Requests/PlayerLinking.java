@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -16,7 +17,7 @@ public class PlayerLinking {
 	private JsonParser parser = new JsonParser();
 	private Constants consts = new Constants();
 	
-	public JsonObject checkLinked(String UUID) throws Exception {
+	public JsonObject checkLinked(String UUID) throws Exception, SocketTimeoutException {
 		
 		HttpURLConnection conn =  consts.newGetConnection("/linking/status/" + UUID);
 		
@@ -41,7 +42,7 @@ public class PlayerLinking {
 		return elem.getAsJsonObject();
 	}
 	
-	public JsonObject setPending(String UUID) throws Exception {
+	public JsonObject setPending(String UUID) throws Exception, SocketTimeoutException {
 		
 		HttpURLConnection conn = consts.newPostConnection("/linking/setstatus/pending");
 		

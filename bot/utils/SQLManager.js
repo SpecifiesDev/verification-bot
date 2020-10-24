@@ -63,6 +63,12 @@ manager.getPlayer = (id, uuid, callback) => {
 
 }
 
+/**
+ * Function to delete a player from a server table.
+ * @param {String} id 
+ * @param {String} uuid 
+ * @param {callback} callback 
+ */
 manager.deletePlayer = (id, uuid, callback) => {
 
     pool.query(`DELETE FROM \`${id}_players\` WHERE uuid = ?`, [uuid], err => {
@@ -168,8 +174,8 @@ manager.deleteServerLink = async(id, callback) => {
 
 /**
  * Function to check if a server is linked.
- * @param {*} id 
- * @param {*} callback 
+ * @param {String} id 
+ * @param {String} callback 
  */
 manager.checkServerLink =  async (id, callback) => {
 
