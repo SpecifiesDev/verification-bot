@@ -1,11 +1,11 @@
-### Overview
+## Overview
 
 Hi, before I get started with setting up this project I would like to explain the general scope of the project, and why I made it open source.
-Generally speaking, you should only fork this project if you want to learn from it, or add features that I have no implemented. With that being said, I will have a fully functional service setup for this project once I start releasing stable builds. Before you fork this project please make sure you understand that this is only to be forked for personal, non-commercial use.
+Generally speaking, you should only fork this project if you want to learn from it, or add features that I have not implemented. With that being said, I will have a fully functional service setup for this project once I start releasing stable builds. Before you fork this project please make sure you understand that this is only to be forked for personal, non-commercial use.
 
-### Installation
+## Installation
 
-The easiest way to clone, and maintain, this project is by using git and cloning it. Open up a command line and run.
+The easiest way to clone, and maintain, this project is by using git and cloning it. Open up a command line and run
 ```bash
 git clone https://github.com/SpecifiesDev/verification-bot
 ```
@@ -14,8 +14,8 @@ This will clone the source code into a folder of your choice.
 
 Now, you're going to want to build the plugin in an IDE of your choice. You need to do this because you're going to have to edit a few values within the code itself in order to get your plugin integrating properly with the bot.
 
-## Setup
-I created the bot in a way where much of it's internals can be quickly configured, without having to do much work. This section will go over necessary setup values and what they are. If you want a more comprehensive detail of what each value is, please refer to the wiki.
+## Bot Setup
+I created the bot in a way where much of it's internals can be quickly configured, without having to do much work. This section will go over necessary setup values and what they are. If you want a more comprehensive detail of what each value is, please refer to the [wiki](https://github.com/SpecifiesDev/verification-bot/wiki/Overview).
 
 ### Important Values
 If you get out your trusty text editor and head over to `./bot/manifest.json`, you will see a lot of things going on. Let's remove all of the clutter and only focus on the important values of this configuration:
@@ -67,4 +67,19 @@ npm i && node bot.js
 ```
 The console will either indicate that your bot has been started, or indicate that there was an error in starting it.
 
+## Spigot Values
+For the time being, all you will need to change in the rebuilt plugin is a variable in `.java/me/specifies/core/Requests/Constants.java`
+
+There's a variable that indicates the API path that the plugin takes to receive data. Change it to whatever IP your bot has, alongside its port.
+
+### Base Value
+```java
+private String api = "http://localhost:8001/api/v1";
+```
+
+### Example Change
+```java
+private String api = "http://127.0.0.1:8080/api/v1";
+```
+Once you have changed this value, you may now integrate both platforms.
 
