@@ -7,6 +7,7 @@ const logger = require('../utils/Logger');
 // routes
 const playerLinking = require('./routes/playerLinking.js');
 const apiStatus = require('./routes/apiStatus.js');
+const playerPreferences = require('./routes/playerPreferences.js');
 
 // setup and configure the server objects
 const app = express();
@@ -22,13 +23,7 @@ const url = config.proxy.base_url;
 // Use the routes
 app.use(url, playerLinking);
 app.use(url, apiStatus);
-
-// Initialize server
-const init = () => {
-    app.listen(config.proxy.port, () => {
-        logger.info(`Internal Proxy started on port: ${config.proxy.port}`);
-    });
-}
+app.use(url, playerPreferences);
 
 
-module.exports = { start: init };
+module.exports = { app: app, url: url, port: config.proxy.port };

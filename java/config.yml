@@ -7,3 +7,5 @@ strict-verification: false
 discord-link: http://discord.gg/hi
 
 api-token: 0
+
+verified-prefix: true

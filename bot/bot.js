@@ -2,10 +2,11 @@
 const manager = require('./utils/SQLManager');
 const logger = require('./utils/Logger')
 const discord = require("discord.js");
-const axios = require('axios');
 const fs = require('fs');
 const proxy = require('./proxy/server');
 
+// custom routing methods for bot querying
+const queries = require('./proxy/routes/botQuerying.js');
 
 
 // parse the manifest
@@ -28,7 +29,7 @@ for(let file of fs.readdirSync('./commands').filter(file => file.endsWith('.js')
 
 client.on('ready', () => {
     logger.info("Bot is online.");
-    proxy.start();
+    proxyInit();
     client.user.setActivity(`${prefix}help`);
 });
 
@@ -65,6 +66,18 @@ client.on('message', async message => {
 
 });
 
+
+const proxyInit = () => {
+
+    let app = proxy.app;
+
+    app.get(`${proxy.url}/bot/username/:UUID`, (req, res) => queries.getUserName(req, res, client, manager));
+
+    app.listen(proxy.port, () => {
+        logger.info(`Proxy started on port: ${proxy.port}`);
+    });
+
+}
 
 
 client.login(token);

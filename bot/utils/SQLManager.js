@@ -46,6 +46,17 @@ manager.linkServer = (id, ip, tokens, callback) => {
 
 }
 
+manager.getClientID = (id, uuid, callback) => {
+
+    pool.query(`SELECT discordID from \`${id}_players\` WHERE uuid = ?`, (err, res) => {
+
+        if(err) return callback("", err);
+
+        callback(res);
+
+    });
+}
+
 /**
  * Function to pull a player's data from a connected discord server.
  * @param {String} id 
@@ -57,7 +68,7 @@ manager.getPlayer = (id, uuid, callback) => {
 
     pool.query(`SELECT * FROM \`${id}_players\` WHERE uuid = ?`, [uuid], (err, res) => {
         if(err) return callback("", err);
-        if(res.length == 0) return callback(res);
+        if(res.length == 0) return callback([]);
         callback(res);
     });
 
@@ -106,7 +117,7 @@ manager.checkVerificationCode = (id, code, callback) => {
 
     pool.query(`SELECT * FROM \`${id}_players\` WHERE code = ?`, [code], (err, res) => {
         if(err) return callback("", err);
-        if(res.length == 0) return callback(res);
+        
         callback(res);
     });
 }
@@ -150,6 +161,16 @@ manager.getServerTokens = (id, callback) => {
         callback(res[0].tokens);
     });
 
+}
+
+manager.getPlayerPreferences = (id, uuid, callback) => {
+
+    pool.query(`SELECT status, message, chat from \`${id}_players\` WHERE uuid = ?`, [uuid], (err, res) => {
+        if(err) return callback("", err);
+
+        callback(res);
+
+    });
 }
 
 /**

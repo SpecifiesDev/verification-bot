@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.specifies.core.Commands.Link;
 import me.specifies.core.Constants.ErrorLogging;
+import me.specifies.core.Events.AddVerifiedPrefix;
 import me.specifies.core.Events.StrictVerification;
 import me.specifies.core.Proxy.ProxyServer;
 import me.specifies.core.Requests.ApiTesting;
@@ -53,6 +54,11 @@ public class Verification extends JavaPlugin {
 	private void registerEvents() {
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new StrictVerification(), this);
+		
+		
+		// only register this event if the owner has this on
+		if(this.getConfig().getBoolean("verified-prefix")) pm.registerEvents(new AddVerifiedPrefix(), this);
+		
 	}
 	
 	// Register all commands here
