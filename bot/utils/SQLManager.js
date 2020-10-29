@@ -173,6 +173,16 @@ manager.getPlayerPreferences = (id, uuid, callback) => {
     });
 }
 
+manager.setPlayerPreferences = (id, map, callback) => {
+
+    pool.query(`UPDATE \`${id}_players\` SET status = ?, message = ?, chat = ? WHERE uuid = ?`, [map.status, map.message, map.chat, map.uuid], err => {
+        if(err) return callback(err);
+
+        callback();
+    });
+
+}
+
 /**
  * Function to drop a server link. The more we progress with the data schema, the more tables we'll need to add to this drop list.
  * @param {String} id 

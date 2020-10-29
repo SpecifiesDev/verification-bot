@@ -20,5 +20,8 @@ public interface PlayerLogging {
 	public static final String CREATED_CODE_STRICT = "&aYou must be verified to join this server. You may join our discord and verify with the code: &6\n";
 	public static final String PENDING_STRICT =  "&aYou must complete the verification process on our discord to join. Your code: &6\n";
 	
+	// Preferences logging
+	public static final String PREF_NO_LINK = "&cSorry, in order to use this command you must be linked to our discord.";
+	public static final String PREF_UPDATED = "&aYour preferences have been updated.";
 	
 }

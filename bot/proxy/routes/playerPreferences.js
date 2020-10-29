@@ -47,4 +47,38 @@ router.get('/preferences/player/:UUID', (req, res) => {
 
 });
 
+router.post('/preferences/players/set', (req, res) => {
+        // parse the body for the values
+        let uuid = req.body.UUID;
+        let token = req.body.token;
+        let id = req.body.server;
+
+        let status = req.body.status;
+        let message = req.body.message;
+        let chat = req.body.chat;
+    
+        // ensure credentials were sent
+        if(!token) return res.status(403).json({message: "No credentials were sent."});
+    
+        // ensure the values aren't null
+        if(!uuid || !id || !status || !message || !chat) return res.status(400).json({message: "Invalid Request"});
+
+        manager.getServerTokens(id, (result, err) => {
+            if(err) return res.status(500);
+            if(result.length == 0) return res.status(403);
+    
+            if(!(JSON.parse(result).tokens.includes(token))) return res.status(403);
+        
+            manager.setPlayerPreferences(id, {status: status, message: message, chat: chat, uuid: uuid}, err => {
+                if(err) {
+                    logger.error(err);
+                    return res.json({success: false, message: "Internal Server Error"});
+                }
+
+                res.json({success: true, message: "Player preferences updated."});
+            });
+
+        });
+});
+
 module.exports = router;

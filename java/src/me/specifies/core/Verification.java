@@ -1,13 +1,21 @@
 package me.specifies.core;
 
+import java.util.HashMap;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.specifies.core.Commands.Link;
+import me.specifies.core.Commands.Preferences;
 import me.specifies.core.Constants.ErrorLogging;
 import me.specifies.core.Events.AddVerifiedPrefix;
+import me.specifies.core.Events.PreferencesInteraction;
+import me.specifies.core.Events.PreventInteraction;
+import me.specifies.core.Events.RemoveInventoryLinks;
 import me.specifies.core.Events.StrictVerification;
 import me.specifies.core.Proxy.ProxyServer;
 import me.specifies.core.Requests.ApiTesting;
@@ -16,6 +24,8 @@ public class Verification extends JavaPlugin {
 	
 	private static Verification core;
 	private ProxyServer server;
+	
+	public static HashMap<UUID, String> inManagedInventory = new HashMap<UUID, String>();
 	
 	public void onEnable() {
 		core = this;
@@ -36,6 +46,8 @@ public class Verification extends JavaPlugin {
 	public void onDisable() { 
 		core = null; 
 		server.stop();
+		
+		for(Player p : Bukkit.getOnlinePlayers()) if(inManagedInventory.containsKey(p.getUniqueId())) p.closeInventory();
 	}
 	
 	public static Verification getInstance() {
@@ -54,6 +66,9 @@ public class Verification extends JavaPlugin {
 	private void registerEvents() {
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new StrictVerification(), this);
+		pm.registerEvents(new PreventInteraction(), this);
+		pm.registerEvents(new PreferencesInteraction(), this);
+		pm.registerEvents(new RemoveInventoryLinks(), this);
 		
 		
 		// only register this event if the owner has this on
@@ -64,6 +79,7 @@ public class Verification extends JavaPlugin {
 	// Register all commands here
 	private void registerCommands() {
 		getCommand("link").setExecutor(new Link());
+		getCommand("prefs").setExecutor(new Preferences());
 	}
 	
 	// Function to check the uptime of the API. 7 second timeout. If the server can't connect, or the socket times out, the plugin is disabled.
