@@ -34,6 +34,7 @@ public class PreferencesInteraction implements Listener {
 			
 			if(Verification.inManagedInventory.get(p.getUniqueId()).equalsIgnoreCase("preferences")) {
 				
+				if(e.getCurrentItem() == null) return;
 				ItemStack clicked = e.getCurrentItem();
 				Inventory inv = e.getInventory();
 				
@@ -43,9 +44,9 @@ public class PreferencesInteraction implements Listener {
 				} else if(e.getRawSlot() == 44) {
 					
 					// Grab all of the set objects in the inventory, evaluate if they're set to on or off, then convert them to an integer.
-					int status = (inv.getItem(19).getDurability() == 13) ? 1 : 0;
-					int message = (inv.getItem(22).getDurability() == 13) ? 1 : 0;
-					int chat = (inv.getItem(25).getDurability() == 13) ? 1 : 0;
+					int status = (inv.getItem(19).getType() == Material.GREEN_TERRACOTTA) ? 1 : 0;
+					int message = (inv.getItem(22).getType() == Material.GREEN_TERRACOTTA) ? 1 : 0;
+					int chat = (inv.getItem(25).getType() == Material.GREEN_TERRACOTTA) ? 1 : 0;
 					
 					
 					try {
@@ -77,10 +78,9 @@ public class PreferencesInteraction implements Listener {
 					// Parse the title for the string 
 					String title = ChatColor.stripColor(clicked.getItemMeta().getDisplayName()).split(":")[0];
 					
-					if(clicked.getDurability() == 13) {
+					if(clicked.getType() == Material.GREEN_TERRACOTTA) {
 						
-						ItemFactory factory = new ItemFactory(Material.AIR, 1);
-						factory.flushShort(Material.STAINED_CLAY, 1, 6);
+						ItemFactory factory = new ItemFactory(Material.RED_TERRACOTTA, 1);
 						
 						factory.setDisplayName(plugin.color("&7" + title + "&8: &cOff."));
 						
@@ -89,8 +89,7 @@ public class PreferencesInteraction implements Listener {
 						
 					} else {
 						
-						ItemFactory factory = new ItemFactory(Material.AIR, 1);
-						factory.flushShort(Material.STAINED_CLAY, 1, 13);
+						ItemFactory factory = new ItemFactory(Material.GREEN_TERRACOTTA, 1);
 						
 						factory.setDisplayName(plugin.color("&7" + title + "&8: &aOn."));
 						

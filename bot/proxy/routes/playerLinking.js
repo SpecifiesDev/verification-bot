@@ -25,7 +25,11 @@ router.get('/linking/status/:UUID', (req, res) => {
         if(result.length == 0) return res.status(403);
 
         // parse the json for the token array, if the sent token isn't in the server's cached tokens, 403 the request
-        if(!(JSON.parse(result).tokens.includes(token))) return res.status(403);
+        let parsedJSON = JSON.parse(result);
+    
+        if(!(parsedJSON.tokens.includes(token))) {
+            if(!parsedJSON.server_token == token) return res.status(403);
+        }
 
         // get the player by the sent id
         manager.getPlayer(id, req.params.UUID, async (playerResult, err) => {
@@ -66,7 +70,11 @@ router.post('/linking/setstatus/pending', (req, res) => {
         if(err) return res.status(500);
         if(result.length == 0) return res.status(403);
 
-        if(!(JSON.parse(result).tokens.includes(token))) return res.status(403);
+        let parsedJSON = JSON.parse(result);
+    
+        if(!(parsedJSON.tokens.includes(token))) {
+            if(!parsedJSON.server_token == token) return res.status(403);
+        }
 
         // Generate a new code for the player
         let code = `${genThree()}-${genThree()}-${genThree()}`;

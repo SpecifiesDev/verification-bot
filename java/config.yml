@@ -1,11 +1,20 @@
+#### Integration Setup
 discord-server-id: 0
-
-proxy-port: 8080
-
-strict-verification: false
-
-discord-link: http://discord.gg/hi
-
 api-token: 0
 
+#### Server Proxy Prot
+proxy-port: 8080
+
+#### Is Strict verification on for the server?
+strict-verification: false
+
+#### Link to your discord server.
+discord-link: http://discord.gg/hi
+
+#### Do you want the chat to be pre formatted wtih verification prefixes?
 verified-prefix: true
+
+### Discord synced punishments. Please indicate the permission required by your punishment handler.
+
+kick: essentials.kick
+ban: essentials.ban

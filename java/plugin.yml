@@ -1,8 +1,15 @@
 name: Verification
 main: me.specifies.core.Verification
-version: 1.0
+version: 1.0.6
+api-version: 1.16
 
 commands:
   link:
     usage: /link
     description: Command to link a player's Minecraft account with their discord account.
+  prefs:
+    usage: /prefs
+    description: Command to open up a player's preferences.
+  status:
+    usage: /status
+    description: Command to check a linked player's discord status.

@@ -64,14 +64,19 @@ client.on('message', async message => {
 
     }
 
+
 });
 
 
+
+
+//queries.getUserStatus(1, 1, client, 1);
 const proxyInit = () => {
 
     let app = proxy.app;
 
     app.get(`${proxy.url}/bot/username/:UUID`, (req, res) => queries.getUserName(req, res, client, manager));
+    app.get(`${proxy.url}/bot/status/:UUID`, (req, res) => queries.getUserStatus(req, res, client, manager));
 
     app.listen(proxy.port, () => {
         logger.info(`Proxy started on port: ${proxy.port}`);

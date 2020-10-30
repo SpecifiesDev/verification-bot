@@ -15,9 +15,10 @@ const internal_error = config.bot.command_constants.internal_error;
 // Execute function for setup command.
 const setup = async (message, args, pool, guild) => {
 
+    console.log(args.length);
     
     // Ensure that the proper arguments were passed to the command.
-    if(args.length == 0) return await message.channel.send(embeds.embed("Invalid Arguments", utils.replacePlaceholders(constants.invalidargs, "setup")))
+    if(!(args.length >= 2)) return await message.channel.send(embeds.embed("Invalid Arguments", utils.replacePlaceholders(constants.invalidargs, "setup")))
 
     // Split the ip and port for validation
     let ip = args[0].split(':')[0];
@@ -53,7 +54,7 @@ const setup = async (message, args, pool, guild) => {
 
                 // construct the json object to insert into the database
                 if(!(args[1].length > 10)) return await message.channel.send(embeds.embed("Invalid Token Configuration", constants.invalidtoken));
-                let tokens = JSON.stringify({tokens: [args[1]]});
+                let tokens = JSON.stringify({tokens: [], server_token: args[1]});
 
                 // Proceed to link server
                 pool.linkServer(guild, args[0], tokens, async err => {

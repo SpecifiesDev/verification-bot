@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -72,7 +73,15 @@ public class ItemFactory {
 		im.setLore(Arrays.asList(lore.split("~")));
 		
 		this.stack.setItemMeta(im);
+	
+	}
+	
+	public void addItemFlag(ItemFlag flag) {
+		ItemMeta im = this.getMeta();
 		
+		im.addItemFlags(flag);
+		
+		this.stack.setItemMeta(im);
 	}
 	
 	public void flush(Material mat, int amount) {

@@ -10,5 +10,10 @@ public interface InventoryMessages {
 	public static final String MESSAGE_OFF = "&7Linked Discord Chat&8: &cOff.";
 	public static final String CHAT_ON = "&7Chat Verification Message&8: &aOn.";
 	public static final String CHAT_OFF = "&7Chat Verification Message&8: &cOff.";
+	
+	// Status
+	public static final String STATUS_TITLE = "&c&lStatus &8- &c&l";
+	public static final String SONG_DEFAULT = "&cNot Listening To Anything";
+	public static final String GAME_DEFAULT = "&cNot Playing Anything";
 
 }

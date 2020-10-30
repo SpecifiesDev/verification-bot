@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.specifies.core.Commands.Link;
 import me.specifies.core.Commands.Preferences;
+import me.specifies.core.Commands.Status;
 import me.specifies.core.Constants.ErrorLogging;
 import me.specifies.core.Events.AddVerifiedPrefix;
 import me.specifies.core.Events.PreferencesInteraction;
@@ -80,6 +81,7 @@ public class Verification extends JavaPlugin {
 	private void registerCommands() {
 		getCommand("link").setExecutor(new Link());
 		getCommand("prefs").setExecutor(new Preferences());
+		getCommand("status").setExecutor(new Status());
 	}
 	
 	// Function to check the uptime of the API. 7 second timeout. If the server can't connect, or the socket times out, the plugin is disabled.

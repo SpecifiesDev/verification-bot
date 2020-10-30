@@ -40,7 +40,7 @@ manager.linkServer = (id, ip, tokens, callback) => {
     
                 callback();
             });
-        })
+        });
 
     });
 
@@ -48,7 +48,7 @@ manager.linkServer = (id, ip, tokens, callback) => {
 
 manager.getClientID = (id, uuid, callback) => {
 
-    pool.query(`SELECT discordID from \`${id}_players\` WHERE uuid = ?`, (err, res) => {
+    pool.query(`SELECT discordID from \`${id}_players\` WHERE uuid = ?`, [uuid], (err, res) => {
 
         if(err) return callback("", err);
 

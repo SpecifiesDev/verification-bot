@@ -36,4 +36,26 @@ public class BotQuerying {
 		
 		return elem.getAsJsonObject();
 	}
+	
+	public JsonObject getStatus(String UUID) throws Exception, SocketTimeoutException {
+		
+		HttpURLConnection conn =  consts.newGetConnection("/bot/status/" + UUID);
+		
+		
+		BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		
+		String input;
+		StringBuffer resp = new StringBuffer();
+		
+		while((input = in.readLine()) != null) {
+			resp.append(input);
+		}
+		
+		in.close();
+		
+
+		JsonElement elem = parser.parse(resp.toString());
+		
+		return elem.getAsJsonObject();
+	}
 }

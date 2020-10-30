@@ -24,4 +24,8 @@ public interface PlayerLogging {
 	public static final String PREF_NO_LINK = "&cSorry, in order to use this command you must be linked to our discord.";
 	public static final String PREF_UPDATED = "&aYour preferences have been updated.";
 	
+	// Status logging
+	public static final String STATUS_ONLINE = "&cThe target player must be online.";
+	public static final String STATUS_NO_LINK = "&cIt would appear that the player you're trying to check the status of does not have their account linked.";
+	public static final String STATUS_OFF = "&cIt would appear that the target player has their status turned off.";
 }

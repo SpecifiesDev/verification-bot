@@ -24,8 +24,12 @@ router.get('/preferences/player/:UUID', (req, res) => {
         }
 
         if(result.length == 0) return res.status(403);
-
-        if(!(JSON.parse(result).tokens.includes(token))) return res.status(403);
+        
+        let parsedJSON = JSON.parse(result);
+    
+        if(!(parsedJSON.tokens.includes(token))) {
+            if(!parsedJSON.server_token == token) return res.status(403);
+        }
 
         manager.getPlayerPreferences(id, uuid, (result, err) => {
             if(err) {
@@ -66,8 +70,12 @@ router.post('/preferences/players/set', (req, res) => {
         manager.getServerTokens(id, (result, err) => {
             if(err) return res.status(500);
             if(result.length == 0) return res.status(403);
+
+            let parsedJSON = JSON.parse(result);
     
-            if(!(JSON.parse(result).tokens.includes(token))) return res.status(403);
+            if(!(parsedJSON.tokens.includes(token))) {
+                if(!parsedJSON.server_token == token) return res.status(403);
+            }
         
             manager.setPlayerPreferences(id, {status: status, message: message, chat: chat, uuid: uuid}, err => {
                 if(err) {
