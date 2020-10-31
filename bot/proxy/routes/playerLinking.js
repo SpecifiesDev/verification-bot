@@ -19,7 +19,10 @@ router.get('/linking/status/:UUID', (req, res) => {
     // Get a server's deployed api tokens
     manager.getServerTokens(id, (result, err) => {
         // error handling
-        if(err) return res.status(500);
+        if(err) {
+            logger.error(err);
+            return res.status(500).json({success: false, message: "Internal Server Error."});
+        }
 
         // if there are results, just return a 403
         if(result.length == 0) return res.status(403);
@@ -28,7 +31,7 @@ router.get('/linking/status/:UUID', (req, res) => {
         let parsedJSON = JSON.parse(result);
     
         if(!(parsedJSON.tokens.includes(token))) {
-            if(!parsedJSON.server_token == token) return res.status(403);
+            if(!(parsedJSON.server_token == token)) return res.status(403).json({success: false, message: "Invalid Authetication"});
         }
 
         // get the player by the sent id
@@ -67,13 +70,16 @@ router.post('/linking/setstatus/pending', (req, res) => {
 
     // validate token
     manager.getServerTokens(id, (result, err) => {
-        if(err) return res.status(500);
+        if(err) {
+            logger.error(err);
+            return res.status(500).json({success: false, message: "Internal Server Error."});
+        }
         if(result.length == 0) return res.status(403);
 
         let parsedJSON = JSON.parse(result);
     
         if(!(parsedJSON.tokens.includes(token))) {
-            if(!parsedJSON.server_token == token) return res.status(403);
+            if(!(parsedJSON.server_token == token)) return res.status(403).json({success: false, message: "Invalid Authetication"});
         }
 
         // Generate a new code for the player
@@ -81,7 +87,10 @@ router.post('/linking/setstatus/pending', (req, res) => {
 
         // create the player
         manager.createPlayer(id, uuid, code, (result, err) => {
-                if(err) return res.json({success: false, message: "Internal Server Error"});
+                if(err) {
+                    logger.error(err);
+                    return res.status(500).json({success: false, message: "Internal Server Error."});
+                }
 
                 // if the player already exists, notify the person
                 if(result) return res.json({success: false, message: "Player Already Exists"});

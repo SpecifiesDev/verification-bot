@@ -7,6 +7,7 @@ const proxy = require('./proxy/server');
 
 // custom routing methods for bot querying
 const queries = require('./proxy/routes/botQuerying.js');
+const { report } = require('./proxy/routes/apiStatus');
 
 
 // parse the manifest
@@ -37,7 +38,9 @@ client.on('message', async message => {
 
     // Simplify it to cleaner variables
     let content = message.content;
-    let guildId = message.guild.id;
+    let guildId; 
+
+    if(!(message.channel.type === 'dm')) guildId = message.guild.id;
 
     // Ignore it if the message is from the bot
     if(message.author.bot) return;
@@ -64,6 +67,7 @@ client.on('message', async message => {
 
     }
 
+    
 
 });
 
@@ -77,6 +81,7 @@ const proxyInit = () => {
 
     app.get(`${proxy.url}/bot/username/:UUID`, (req, res) => queries.getUserName(req, res, client, manager));
     app.get(`${proxy.url}/bot/status/:UUID`, (req, res) => queries.getUserStatus(req, res, client, manager));
+    app.post(`${proxy.url}/bot/handlers/message/`, (req, res) => queries.sendDM(req, res, client, manager))
 
     app.listen(proxy.port, () => {
         logger.info(`Proxy started on port: ${proxy.port}`);

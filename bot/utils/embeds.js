@@ -12,4 +12,21 @@ const newEmbed = (title, desc) => {
     .setFooter(config.bot.author);
 }
 
-module.exports = { embed: newEmbed };
+const playerMessages = (title, desc, fields, uuid) => {
+    let embed = new discord.MessageEmbed()
+    .setColor(config.bot.color)
+    .setTitle(title)
+    .setDescription(desc)
+    .setThumbnail(`https://crafatar.com/avatars/${uuid}`)
+    .setTimestamp()
+    .setFooter(config.bot.author);
+
+    for(field of fields) {
+        embed.addField(field.title, field.desc, field.inline);
+    }
+
+    return embed;
+
+}
+
+module.exports = { embed: newEmbed, playerMessages: playerMessages };

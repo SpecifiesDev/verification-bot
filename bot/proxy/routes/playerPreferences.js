@@ -28,18 +28,20 @@ router.get('/preferences/player/:UUID', (req, res) => {
         let parsedJSON = JSON.parse(result);
     
         if(!(parsedJSON.tokens.includes(token))) {
-            if(!parsedJSON.server_token == token) return res.status(403);
+            if(!(parsedJSON.server_token == token)) return res.status(403).json({success: false, message: "Invalid Authetication"});
         }
 
+        // get the player's preferences
         manager.getPlayerPreferences(id, uuid, (result, err) => {
             if(err) {
                 logger.error(err);
                 return res.status(500).json({success: false, message: "Internal Server Error", code: "ISE"});
             }
-    
             
+            // if the player doesn't exist, indicate so
             if(result.length == 0) return res.json({success: false, message: "Player Doesn't Exist", code: "DNE"});
     
+            // grab the object, append a success code to it, then send the response
             let data = result[0];
     
             data.success = true;
@@ -68,7 +70,10 @@ router.post('/preferences/players/set', (req, res) => {
         if(!uuid || !id || !status || !message || !chat) return res.status(400).json({message: "Invalid Request"});
 
         manager.getServerTokens(id, (result, err) => {
-            if(err) return res.status(500);
+            if(err) {
+                logger.error(err);
+                return res.status(500).json({success: false, message: "Internal Server Error."});
+            }
             if(result.length == 0) return res.status(403);
 
             let parsedJSON = JSON.parse(result);
