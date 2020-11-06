@@ -13,8 +13,6 @@ public class GetConfiguredServer implements HttpHandler {
 	
 	public void handle(HttpExchange exc) throws IOException {
 		
-		
-		
 		// create our response object to build onto
 		byte[] response = null;
 		
@@ -38,6 +36,7 @@ public class GetConfiguredServer implements HttpHandler {
 		OutputStream stream = exc.getResponseBody();
 		stream.write(response);
 		stream.close();
+	
 	}
 
 }

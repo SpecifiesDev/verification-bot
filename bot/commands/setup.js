@@ -14,8 +14,6 @@ const internal_error = config.bot.command_constants.internal_error;
 
 // Execute function for setup command.
 const setup = async (message, args, pool, guild) => {
-
-    console.log(args.length);
     
     // Ensure that the proper arguments were passed to the command.
     if(!(args.length >= 2)) return await message.channel.send(embeds.embed("Invalid Arguments", utils.replacePlaceholders(constants.invalidargs, "setup")))

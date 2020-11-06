@@ -126,7 +126,7 @@ const sendDM = async(req, res, client, manager) => {
 
 }
 
-const getStatus = async (req, res, client, manager) => {
+const getStatus = async (req, res, client, manager, active) => {
     if(!req.headers.token) return res.status(403).json({message: "No credentials were sent."});
 
     // pull all the data we need
@@ -155,39 +155,60 @@ const getStatus = async (req, res, client, manager) => {
                 return res.status(500).json({success: false, message: "Internal Server Error"});
             }
             
-            // put a new response object, making this easier
-            let resp = {};
-    
-            // ensure that the user is actually in the database.
-            if(result.length == 0) return res.json({success: false, message: "User wasn't found in the database."});
-    
-            // get the id
-            let cid = result[0].discordID;
-            
-            // get the cached user
-            let user = client.users.cache.get(cid);
-
-            // if the user isn't cached, send a response saying so
-            if(user == undefined) return res.json({success: false, message: "No cached data on the user."});
-            
-            // get the status (dnd/away/online etc..)
-            resp.status = user.presence.status;
-            
-            // the response will be successful
-            resp.success = true;
-
-            // loop through the activities and construct them into an appropriate response
-            // I'm aware that if they're playing more than one game, only one will be sent, but I'm not terribly worried about it
-            for(activity of user.presence.activities) {
-                if(activity.type === 'LISTENING') {
-                    resp.song = `${activity.state.split(';')[0]} - ${activity.details}`;
+            manager.getServerIP(id, (response, err) => {
+                if(err) {
+                    logger.error(err);
+                    return res.status(500).json({success: false, message: "Internal Server Error"});
                 }
-                if(activity.type === 'PLAYING') resp.game = activity.name;
-                if(activity.type === 'CUSTOM_STATUS') resp.custom = activity.state;
-            }
 
-            // response
-            res.json(resp);
+                if(response.length == 0) return res.json({success: false, message: "It would appear this server isn't linked properly."});
+
+                // put a new response object, making this easier
+                let resp = {};
+        
+                // ensure that the user is actually in the database.
+                if(result.length == 0) return res.json({success: false, message: "User wasn't found in the database."});
+        
+                // get the id
+                let cid = result[0].discordID;
+                
+                // get the cached user
+                let user = client.users.cache.get(cid);
+
+                // if the user isn't cached, send a response saying so
+                if(user == undefined) return res.json({success: false, message: "No cached data on the user."});
+                
+                // get the status (dnd/away/online etc..)
+                resp.status = user.presence.status;
+                
+                // the response will be successful
+                resp.success = true;
+
+                // loop through the activities and construct them into an appropriate response
+                // I'm aware that if they're playing more than one game, only one will be sent, but I'm not terribly worried about it
+                for(activity of user.presence.activities) {
+                    if(activity.type === 'LISTENING') {
+                        resp.song = `${activity.state.split(';')[0]} - ${activity.details}`;
+                    }
+                    if(activity.type === 'PLAYING') resp.game = activity.name;
+                    if(activity.type === 'CUSTOM_STATUS') resp.custom = activity.state;
+                }
+
+                if(active.has(cid)) {
+                    let array = active.get(cid);
+                    let count = 0;
+                    for(object of array) {
+                        if(object.guild == id) count++;
+                    }
+                    if(count == 0) array.push({id: cid, uuid: req.params.UUID, guild: id, ip: response[0].ip})
+                    active.set(cid, array);
+                } else active.set(cid, [{id: cid, uuid: req.params.UUID, guild: id, ip: response[0].ip}]);
+                
+
+                // response
+                res.json(resp);
+
+            });
             
     
         });
@@ -196,6 +217,7 @@ const getStatus = async (req, res, client, manager) => {
 
 
 }
+
 
 module.exports = { 
     getUserName: getUserName,

@@ -33,7 +33,7 @@ public class StaticInventories {
 			factory.setType(Material.YELLOW_TERRACOTTA);
 		}
 		if(status.equalsIgnoreCase("offline")) {
-			factory.setDisplayName("&8&lOOffline");
+			factory.setDisplayName("&8&lOffline");
 			factory.setType(Material.GRAY_TERRACOTTA);
 		}
 		

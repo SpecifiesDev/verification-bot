@@ -41,6 +41,13 @@ public class JSONFactory {
 	}
 	
 	/**
+	 * Function to flush to json factory.
+	 */
+	public void flush() {
+		this.values = new HashMap<>();
+	}
+	
+	/**
 	 * Function to stringify the built factory to a json string that can be sent off for further manipulation.
 	 * @return returnString
 	 */

@@ -101,7 +101,7 @@ public class Status implements CommandExecutor {
 			
 		} catch (Exception err) {
 			err.printStackTrace();
-			p.sendMessage(PlayerLogging.LOCAL_INTERNAL_ERROR);
+			p.sendMessage(plugin.color(PlayerLogging.LOCAL_INTERNAL_ERROR));
 		}
 		
 	}

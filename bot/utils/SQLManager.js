@@ -46,6 +46,21 @@ manager.linkServer = (id, ip, tokens, callback) => {
 
 }
 
+manager.getServerIP = (id, callback) => {
+
+    pool.query(`SELECT ip FROM \`${id}\``, (err, res) => {
+        if(err) return callback("", err);
+
+        callback(res);
+    })
+}
+
+/**
+ * Function to get the stored clientID from a user's UUID. 
+ * @param {String} id 
+ * @param {String} uuid 
+ * @param {String} callback 
+ */
 manager.getClientID = (id, uuid, callback) => {
 
     pool.query(`SELECT discordID from \`${id}_players\` WHERE uuid = ?`, [uuid], (err, res) => {
@@ -163,6 +178,12 @@ manager.getServerTokens = (id, callback) => {
 
 }
 
+/**
+ * Function to get player preference's from their UUID
+ * @param {String} id 
+ * @param {String} uuid 
+ * @param {callback} callback 
+ */
 manager.getPlayerPreferences = (id, uuid, callback) => {
 
     pool.query(`SELECT status, message, chat from \`${id}_players\` WHERE uuid = ?`, [uuid], (err, res) => {
@@ -173,6 +194,12 @@ manager.getPlayerPreferences = (id, uuid, callback) => {
     });
 }
 
+/**
+ * Function to set player preferences from their UUID
+ * @param {String} id 
+ * @param {Object} map 
+ * @param {callback} callback 
+ */
 manager.setPlayerPreferences = (id, map, callback) => {
 
     pool.query(`UPDATE \`${id}_players\` SET status = ?, message = ?, chat = ? WHERE uuid = ?`, [map.status, map.message, map.chat, map.uuid], err => {

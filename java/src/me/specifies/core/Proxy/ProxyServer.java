@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import com.sun.net.httpserver.HttpServer;
 
 import me.specifies.core.Verification;
+import me.specifies.core.Proxy.Handlers.EmitStatusChange;
 import me.specifies.core.Proxy.Handlers.GetConfiguredServer;
 
 public class ProxyServer {
@@ -27,6 +28,7 @@ public class ProxyServer {
 		
 		// contexts
 		this.proxy.createContext("/iproxy/setup/configuredserver", new GetConfiguredServer());
+		this.proxy.createContext("/iproxy/status/emit", new EmitStatusChange());
 		
 		// configs
 		this.proxy.setExecutor(null);

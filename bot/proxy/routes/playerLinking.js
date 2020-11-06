@@ -36,7 +36,10 @@ router.get('/linking/status/:UUID', (req, res) => {
 
         // get the player by the sent id
         manager.getPlayer(id, req.params.UUID, async (playerResult, err) => {
-            if(err) return res.status(500);
+            if(err) {
+                logger.error(err);
+                return res.status(500).json({success: false, message: "Internal Server Error."});
+            }
 
             // If not result was found, the player isn't in the table. Tell the user that they need to be created.
             if(playerResult.length == 0) res.json({success: true, linked: false, pending: false})
